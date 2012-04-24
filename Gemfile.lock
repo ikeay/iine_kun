@@ -3,6 +3,7 @@ GEM
   specs:
     clockwork (0.4.0)
       tzinfo
+    json (1.6.4)
     tzinfo (0.3.33)
 
 PLATFORMS
@@ -10,3 +11,4 @@ PLATFORMS
 
 DEPENDENCIES
   clockwork
+  json
