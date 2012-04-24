@@ -28,4 +28,4 @@ handler do |job|
 	end
 end
 
-every(5.seconds, 'frequent.job')
+every(3.seconds, 'frequent.job')
