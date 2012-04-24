@@ -1,1 +1,1 @@
-web: bundle exec clockwork likes.rb
+clock: bundle exec clockwork likes.rb
