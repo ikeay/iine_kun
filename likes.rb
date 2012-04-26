@@ -6,9 +6,10 @@ require 'clockwork'
 include Clockwork
 
 handler do |job|
-	f = open("likes.json").read
-	file = JSON.parse(f)
-	#f.close
+  file = ""
+	File.open("likes.json") do |f|
+	  file = JSON.parse(f.read)
+  end
 	count = file["like"]
 	res = open("https://graph.facebook.com/http://web.sfc.keio.ac.jp/~t10064ai/like_kun/index.html").read
 	res2 = JSON.parse(res)
