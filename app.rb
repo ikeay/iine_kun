@@ -8,5 +8,5 @@ configure do
 end
 
 get '/' do
-  REDIS.get("like")
+  "like:"+REDIS.get("like").to_s
 end
