@@ -1,18 +1,15 @@
 #coding:utf-8
 require 'open-uri'
 require 'rubygems'
-require 'sqlite3'
 require 'json'
 require 'clockwork'
+require 'redis'
 include Clockwork
 
 handler do |job|
-  db = SQLite3::Database.new("data.db")
-  db.execute('select * from facebook') do |row|
-  @count=row[0].to_i
-  end
-  db.close
-  puts @count
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+  count=redis.get("like")
   res = open("https://graph.facebook.com/http://web.sfc.keio.ac.jp/~t10064ai/like_kun/index.html").read
   res2 = JSON.parse(res)
   if res2["shares"].nil?
@@ -20,16 +17,12 @@ handler do |job|
   else
     like_count = res2["shares"]
   end
- 
-  puts like_count
-  if @count.to_i!=like_count.to_i
-  	db = SQLite3::Database.new("data.db")
-  	db.execute("delete from facebook where likes='#{@count}'")
-  	sql = "insert into facebook values (:likes)"
-  	db.execute(sql, :likes => like_count)
-    db.close
-    puts "hoge" 
+  #puts count
+  #puts like_count
+  if count.to_i!=like_count.to_i
+    redis.set("like", like_count) 
   end
+  #puts redis.get("like")
 end
 
-every(10.seconds, 'frequent.job')
+every(5.seconds, 'frequent.job')
