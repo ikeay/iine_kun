@@ -18,12 +18,12 @@ handler do |job|
   else
     like_count = res2["shares"]
   end
-  puts "redis get:" + count
-  puts "like:" + like_count
+  puts "redis get:" + count.to_s
+  puts "like:" + like_count.to_s
   if count.to_i!=like_count.to_i
     @redis.set("like", like_count) 
   end
-  puts "redis set:" + @redis.get("like")
+  puts "redis set:" + @redis.get("like").to_s
 end
 
 every(5.seconds, 'frequent.job')
