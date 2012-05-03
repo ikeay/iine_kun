@@ -6,10 +6,11 @@ require 'clockwork'
 require 'redis'
 include Clockwork
 
+uri = URI.parse(ENV["REDISTOGO_URL"])
+@redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+
 handler do |job|
-  uri = URI.parse(ENV["REDISTOGO_URL"])
-  redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-  count=redis.get("like")
+  count=@redis.get("like")
   res = open("https://graph.facebook.com/http://web.sfc.keio.ac.jp/~t10064ai/like_kun/index.html").read
   res2 = JSON.parse(res)
   if res2["shares"].nil?
@@ -17,12 +18,12 @@ handler do |job|
   else
     like_count = res2["shares"]
   end
-  puts "redis get:"+ count
+  puts "redis get:" + count
   puts "like:" + like_count
   if count.to_i!=like_count.to_i
-    redis.set("like", like_count) 
+    @redis.set("like", like_count) 
   end
-  puts "redis set:" + redis.get("like")
+  puts "redis set:" + @redis.get("like")
 end
 
 every(5.seconds, 'frequent.job')
