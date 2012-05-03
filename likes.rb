@@ -11,7 +11,8 @@ uri = URI.parse(ENV["REDISTOGO_URL"])
 
 handler do |job|
   count=@redis.get("like")
-  res = open("https://graph.facebook.com/http://web.sfc.keio.ac.jp/~t10064ai/like_kun/index.html").read
+  #res = open("https://graph.facebook.com/http://web.sfc.keio.ac.jp/~t10064ai/like_kun/index.html").read
+  res = open(ENV["IINE_KUN"]).read
   res2 = JSON.parse(res)
   if res2["shares"].nil?
     like_count = 0
